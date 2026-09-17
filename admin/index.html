@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Law Off Track — Admin</title>
+  <!-- Netlify Identity widget: lets you log in with the email you're invited with -->
+  <script defer src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+  <!-- Decap CMS (formerly Netlify CMS): reads admin/config.yml and gives you a
+       form-based editor that commits straight to content/posts.json on GitHub. -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <script>
+    // If someone lands on /admin without being logged in, send them through
+    // the Netlify Identity login modal, then back here once authenticated.
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", (user) => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
+  </script>
+</body>
+</html>

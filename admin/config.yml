@@ -1,0 +1,60 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Where images you upload through the editor get stored/served from.
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+publish_mode: simple
+
+collections:
+  - name: "posts"
+    label: "Case Files (Posts)"
+    files:
+      - name: "posts"
+        label: "All Posts"
+        file: "content/posts.json"
+        description: "Add, edit, reorder or remove posts here. Changes go live within a minute or two of saving."
+        fields:
+          - label: "Posts"
+            name: "posts"
+            widget: "list"
+            summary: "{{fields.title}} — {{fields.date}}"
+            fields:
+              - label: "Title"
+                name: "title"
+                widget: "string"
+              - label: "URL slug"
+                name: "slug"
+                widget: "string"
+                hint: "Short, web-safe id, e.g. my-new-post — no spaces. Used in the post's link, so avoid changing it once published."
+              - label: "Date"
+                name: "date"
+                widget: "date"
+                date_format: "YYYY-MM-DD"
+                picker_utc: true
+              - label: "Featured"
+                name: "featured"
+                widget: "boolean"
+                required: false
+                default: false
+                hint: "Only one post should be featured at a time — it becomes the large hero card at the top."
+              - label: "Image"
+                name: "image"
+                widget: "image"
+                required: false
+                hint: "Optional. Shows as a banner on a featured post, a thumbnail on a regular one, and a header image on the post itself."
+              - label: "Categories / tags"
+                name: "categories"
+                widget: "list"
+                field: { label: "Tag", name: "tag", widget: "string" }
+              - label: "Excerpt"
+                name: "excerpt"
+                widget: "text"
+                hint: "One or two sentences shown on the homepage card."
+              - label: "Body"
+                name: "body"
+                widget: "markdown"
+                buttons: ["bold", "italic", "link", "heading-three", "quote", "code", "bulleted-list", "numbered-list"]
+                editor_components: []
