@@ -3,9 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Law Off Track — case commentary that studies the story behind the judgment.">
+<meta name="description" content="Law Off Track: case commentary that studies the story behind the judgment.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ctext%20y%3D%27.9em%27%20font-size%3D%2790%27%3E%E2%9A%96%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <title>Law Off Track</title>
+<script>
+  /* Netlify Identity invite/recovery/confirmation links land on the site's
+     homepage by default. Only /admin/ has the Identity widget loaded to
+     process that token and show the "set your password" form, so bounce
+     straight there, preserving the token in the URL hash. */
+  if (window.location.hash && /invite_token|recovery_token|confirmation_token/.test(window.location.hash)) {
+    window.location.replace('/admin/' + window.location.hash);
+  }
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,15 +23,15 @@
 <style>
 /* ============================================================
    DESIGN PLAN
-   Color — three palettes lifted from the user's reference images,
+   Color: three palettes lifted from the user's reference images,
      each a moody, editorial dark ground so switching between them
      never breaks contrast:
-       "Blush" — #4B2E38 surface / #F6DCE2 ink / #C23A55 accent
-       "Dusk"  — #2E1F26 surface / #F3D9E4 ink / #F2A6C4 accent
-       "Ridge" — #16162C surface / #F4E6D2 ink / #D9793B accent
-   Type — Fraunces (display, italic voice) + Work Sans (body) +
+       "Blush": #4B2E38 surface / #F6DCE2 ink / #C23A55 accent
+       "Dusk":  #2E1F26 surface / #F3D9E4 ink / #F2A6C4 accent
+       "Ridge": #16162C surface / #F4E6D2 ink / #D9793B accent
+   Type: Fraunces (display, italic voice) + Work Sans (body) +
      IBM Plex Mono (case numbers, dates, category tags)
-   Layout — dossier / case-file conceit: a numbered docket of
+   Layout: dossier / case-file conceit: a numbered docket of
      posts you page through, a reading view that slides over it,
      a custom cursor that behaves like a pointer picking up files
    ============================================================ */
@@ -389,7 +398,7 @@ nav.links a:hover::after { width: 100%; }
 
 /* ---------- about ---------- */
 .about-panel {
-  margin-top: 90px; padding: clamp(28px, 5vw, 50px);
+  margin-top: 0; padding: clamp(28px, 5vw, 50px);
   border-radius: 22px;
   background: linear-gradient(155deg, color-mix(in srgb, var(--surface) 75%, transparent), color-mix(in srgb, var(--surface2) 55%, transparent));
   border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
@@ -398,9 +407,28 @@ nav.links a:hover::after { width: 100%; }
 .about-panel p { color: var(--on-surf-soft); max-width: 62ch; font-size: 1.02rem; }
 .about-panel .sig { font-family: var(--serif); font-style: italic; color: var(--accent); margin-top: 18px; }
 
+.author-panel {
+  margin-top: 30px; padding: clamp(28px, 5vw, 50px);
+  border-radius: 22px;
+  background: linear-gradient(155deg, color-mix(in srgb, var(--surface) 75%, transparent), color-mix(in srgb, var(--surface2) 55%, transparent));
+  border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  display: flex; gap: clamp(22px, 4vw, 42px); align-items: flex-start; flex-wrap: wrap;
+}
+.author-panel .author-photo {
+  width: clamp(140px, 22vw, 190px); aspect-ratio: 2 / 3; object-fit: cover;
+  border-radius: 16px; flex-shrink: 0;
+  border: 1px solid color-mix(in srgb, var(--on-surf) 18%, transparent);
+}
+.author-panel .author-copy { flex: 1; min-width: 240px; }
+.author-panel h2 { font-family: var(--serif); font-size: clamp(1.3rem, 2.6vw, 1.7rem); margin: 0 0 12px; color: var(--on-surf); }
+.author-panel p { color: var(--on-surf-soft); max-width: 60ch; font-size: 1.02rem; margin: 0 0 14px; }
+.author-panel p:last-of-type { margin-bottom: 0; }
+.author-panel .role-line { font-family: var(--mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+.author-panel .sig { font-family: var(--serif); font-style: italic; color: var(--accent); margin-top: 18px; }
+
 /* ---------- contact ---------- */
 .contact-panel {
-  margin-top: 30px; padding: clamp(28px, 5vw, 50px);
+  margin-top: 0; padding: clamp(28px, 5vw, 50px);
   border-radius: 22px;
   background: linear-gradient(155deg, color-mix(in srgb, var(--surface) 75%, transparent), color-mix(in srgb, var(--surface2) 55%, transparent));
   border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
@@ -454,15 +482,17 @@ footer {
   display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
 }
 
-/* ---------- reading view ---------- */
-#reader {
+/* ---------- reading view (also used for About / Contact as separate pages) ---------- */
+#reader, #about-view, #contact-view {
   position: fixed; inset: 0; z-index: 60;
   background: var(--bg); color: var(--ink);
   overflow-y: auto;
   transform: translateY(100%);
   transition: transform .55s cubic-bezier(.16,.9,.2,1);
 }
-#reader.open { transform: translateY(0); }
+#reader.open, #about-view.open, #contact-view.open { transform: translateY(0); }
+
+.static-page { max-width: 700px; margin: 0 auto; padding: clamp(30px, 6vw, 70px) clamp(18px, 4vw, 24px) 120px; }
 
 .progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent); width: 0%; z-index: 70; transition: width .1s linear; }
 
@@ -593,7 +623,7 @@ article.post .body hr { border: none; border-top: 1px solid color-mix(in srgb, v
         <span class="line"><span>ten percent <em>law</em></span></span>
         <span class="line"><span>ninety percent <em>story</em>.</span></span>
       </h1>
-      <p class="lede">A running collection of judgments, dissents and the context textbooks leave out &mdash; corruption, Kashmir, Delhi's constitutional tug-of-war, and the dissent that tried to save it.</p>
+      <p class="lede">A running collection of judgments, dissents and the context textbooks leave out: corruption, Kashmir, Delhi's constitutional tug-of-war, and the dissent that tried to save it.</p>
       <div class="hero-meta">
         <div><strong id="post-count">6</strong> entries filed</div>
         <div><strong>2020&ndash;</strong>ongoing</div>
@@ -610,12 +640,66 @@ article.post .body hr { border: none; border-top: 1px solid color-mix(in srgb, v
     </div>
     <div class="docket" id="docket"></div>
 
+    <footer>
+      <span>&copy; <span id="year"></span> Law Off Track.</span>
+      <span>Built for reading between the ratio and the reasoning.</span>
+    </footer>
+  </div>
+</main>
+
+<div id="reader" aria-hidden="true">
+  <div class="reader-head">
+    <button class="back-btn" data-nav data-magnet data-close-view>&larr; Back to case files</button>
+    <div class="palette-switch" role="group" aria-label="Colour theme">
+      <button class="swatch blush" data-palette="blush" data-magnet aria-pressed="true" title="Blush theme"></button>
+      <button class="swatch dusk" data-palette="dusk" data-magnet aria-pressed="false" title="Dusk theme"></button>
+      <button class="swatch ridge" data-palette="ridge" data-magnet aria-pressed="false" title="Ridge theme"></button>
+    </div>
+  </div>
+  <article class="post" id="post-content"></article>
+  <div class="share-row" id="share-row"></div>
+  <div class="comments" id="comments"></div>
+  <div class="next-post" id="next-post"></div>
+</div>
+
+<div id="about-view" aria-hidden="true">
+  <div class="reader-head">
+    <button class="back-btn" data-nav data-magnet data-close-view>&larr; Back to case files</button>
+    <div class="palette-switch" role="group" aria-label="Colour theme">
+      <button class="swatch blush" data-palette="blush" data-magnet aria-pressed="true" title="Blush theme"></button>
+      <button class="swatch dusk" data-palette="dusk" data-magnet aria-pressed="false" title="Dusk theme"></button>
+      <button class="swatch ridge" data-palette="ridge" data-magnet aria-pressed="false" title="Ridge theme"></button>
+    </div>
+  </div>
+  <div class="static-page">
     <div class="about-panel" id="about">
       <h2>About Law Off Track</h2>
       <p>Law Offtrack, as the name does not suggest, is an attempt to study case laws from a point of view which is often neglected in classroom study. That is, the context of the case law. Everyone seems to know what the hon'ble judge said, what was the quorum, what was the ratio, and all that vital stuff. But we forget to visualize the context in which the case erupted and the context in which the judgement was passed, because there is a very high chance that both can be different. Moreover, there are a dozen untold, unobserved stories hidden in case laws, which I believe are worth discussing. I will also write about some topics which may not have case commentary but are so close to my heart that I somehow end up writing about them.</p>
-      <p class="sig">&mdash; Law Off Track</p>
+      <p class="sig">Law Off Track</p>
     </div>
+    <div class="author-panel">
+      <img class="author-photo" src="images/author-eukti.jpg" alt="Eukti Garg">
+      <div class="author-copy">
+        <h2>About the Author</h2>
+        <p class="role-line">Advocate &middot; Sports Aficionado &middot; Public Policy Enthusiast &middot; Commercial and Tax Litigation</p>
+        <p>Eukti Garg is a lawyer, and a fairly incurable law-enthusiast, the kind who reads a judgment for the part everyone else skims past, and remembers a dissent longer than the majority opinion that buried it. She practices in commercial and tax litigation, but what she's actually chasing here is context: what a judge chose to write between the lines, and what a judgment quietly does to the people who never show up in its cause title.</p>
+        <p>She puts her own ambition for this space simply: <em>&ldquo;What Ashleigh Barty did to various sports, I want to do that with law.&rdquo;</em> It's about walking away from the one script everyone assumes you have to follow, on her own terms, while still being very good at the game. When she isn't doing that, she's a sports aficionado and a public policy enthusiast, which mostly means she'll argue about a Supreme Court bench and a Grand Slam final with equal conviction.</p>
+        <p class="sig">Eukti</p>
+      </div>
+    </div>
+  </div>
+</div>
 
+<div id="contact-view" aria-hidden="true">
+  <div class="reader-head">
+    <button class="back-btn" data-nav data-magnet data-close-view>&larr; Back to case files</button>
+    <div class="palette-switch" role="group" aria-label="Colour theme">
+      <button class="swatch blush" data-palette="blush" data-magnet aria-pressed="true" title="Blush theme"></button>
+      <button class="swatch dusk" data-palette="dusk" data-magnet aria-pressed="false" title="Dusk theme"></button>
+      <button class="swatch ridge" data-palette="ridge" data-magnet aria-pressed="false" title="Ridge theme"></button>
+    </div>
+  </div>
+  <div class="static-page">
     <div class="contact-panel" id="contact">
       <h2>Contact</h2>
       <p>For any queries ranging from &ldquo;what exactly is the blog's motive&rdquo; to &ldquo;are you even qualified?&rdquo;, you can write in below, or reach me directly at <a class="email-link" href="mailto:yukti15garg@gmail.com">yukti15garg@gmail.com</a>.</p>
@@ -634,31 +718,11 @@ article.post .body hr { border: none; border-top: 1px solid color-mix(in srgb, v
         </div>
         <div class="full">
           <button type="submit" class="btn-primary">Send message &rarr;</button>
-          <div class="form-note">Opens your email app with this message ready to send to yukti15garg@gmail.com &mdash; this site has no server, so nothing is transmitted until you hit send there.</div>
+          <div class="form-note">Opens your email app with this message ready to send to yukti15garg@gmail.com. This site has no server, so nothing is transmitted until you hit send there.</div>
         </div>
       </form>
     </div>
-
-    <footer>
-      <span>&copy; <span id="year"></span> Law Off Track.</span>
-      <span>Built for reading between the ratio and the reasoning.</span>
-    </footer>
   </div>
-</main>
-
-<div id="reader" aria-hidden="true">
-  <div class="reader-head">
-    <button class="back-btn" id="back-btn" data-nav data-magnet>&larr; Back to case files</button>
-    <div class="palette-switch" role="group" aria-label="Colour theme">
-      <button class="swatch blush" data-palette="blush" data-magnet aria-pressed="true" title="Blush theme"></button>
-      <button class="swatch dusk" data-palette="dusk" data-magnet aria-pressed="false" title="Dusk theme"></button>
-      <button class="swatch ridge" data-palette="ridge" data-magnet aria-pressed="false" title="Ridge theme"></button>
-    </div>
-  </div>
-  <article class="post" id="post-content"></article>
-  <div class="share-row" id="share-row"></div>
-  <div class="comments" id="comments"></div>
-  <div class="next-post" id="next-post"></div>
 </div>
 
 <script>
@@ -861,6 +925,8 @@ function renderCaseFiles() {
   
   
   if (location.hash.startsWith('#post=')) openPost(location.hash.replace('#post=', ''));
+  else if (location.hash === '#about') showOverlay(aboutView);
+  else if (location.hash === '#contact') showOverlay(contactView);
 }
 
 fetch('content/posts.json')
@@ -883,6 +949,46 @@ const progress = document.getElementById('progress');
 const AUTHOR_EMAIL = 'yukti15garg@gmail.com';
 const SITE_NAME = 'Law Off Track';
 
+/* ---------- Disqus comments ----------
+   1. Register the site (free) at https://disqus.com/admin/create/ to get a
+      "shortname" (e.g. "law-off-track"), then replace the placeholder below.
+   2. In Disqus's own dashboard (Settings → your site → General), set the
+      Website URL to your live site so it matches what's embedded here.
+   Disqus is a single-page app here (hash routing, no full page reloads
+   between posts), so after the very first load we use DISQUS.reset()
+   instead of re-inserting the embed script. */
+const DISQUS_SHORTNAME = 'YOUR-DISQUS-SHORTNAME';
+let disqusInited = false;
+
+function loadDisqus(p, pageUrl) {
+  const thread = document.getElementById('disqus_thread');
+  if (!thread) return;
+  if (DISQUS_SHORTNAME === 'YOUR-DISQUS-SHORTNAME') {
+    thread.innerHTML = '<p style="font-family:var(--mono);font-size:.75rem;color:var(--on-surf-soft);">Comments aren\'t switched on yet. Register a free Disqus shortname and drop it into the code to enable this box.</p>';
+    return;
+  }
+  const pageId = 'post-' + p.slug;
+  if (!disqusInited) {
+    window.disqus_config = function () {
+      this.page.url = pageUrl;
+      this.page.identifier = pageId;
+    };
+    const d = document, s = d.createElement('script');
+    s.src = 'https://' + DISQUS_SHORTNAME + '.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', String(+new Date()));
+    (d.head || d.body).appendChild(s);
+    disqusInited = true;
+  } else if (window.DISQUS) {
+    window.DISQUS.reset({
+      reload: true,
+      config: function () {
+        this.page.url = pageUrl;
+        this.page.identifier = pageId;
+      }
+    });
+  }
+}
+
 function openPost(slug) {
   const idx = sorted.findIndex(p => p.slug === slug);
   if (idx === -1) return;
@@ -898,9 +1004,9 @@ function openPost(slug) {
     <div class="body">${marked.parse(p.body)}</div>
   `;
 
-  const plainTitle = p.title.replace(/&mdash;/g, '—').replace(/&[a-z]+;/g, '');
+  const plainTitle = p.title.replace(/&[a-z]+;/g, '');
   const shareUrl = location.origin + location.pathname + '#post=' + p.slug;
-  const waText = encodeURIComponent(`${plainTitle} — ${SITE_NAME}\n${shareUrl}`);
+  const waText = encodeURIComponent(`${plainTitle} · ${SITE_NAME}\n${shareUrl}`);
   const liUrl = encodeURIComponent(shareUrl);
   shareRowEl.innerHTML = `
     <span class="label">Share this case file</span>
@@ -929,35 +1035,11 @@ function openPost(slug) {
   });
 
   commentsEl.innerHTML = `
-    <h2>Leave a comment</h2>
-    <p class="hint">This is a free, backend-free site, so comments are sent straight to the author's inbox rather than posted publicly &mdash; open a reply, not a public thread.</p>
-    <form id="comment-form" class="comment-form">
-      <div class="row">
-        <div style="flex:1; min-width:180px;">
-          <label class="field-label" for="cm-name">Name</label>
-          <input class="field-input" type="text" id="cm-name" placeholder="Your name" required>
-        </div>
-      </div>
-      <div>
-        <label class="field-label" for="cm-text">Comment</label>
-        <textarea class="field-textarea" id="cm-text" placeholder="What did you think of ${plainTitle}?" required></textarea>
-      </div>
-      <div>
-        <button type="submit" class="btn-primary">Send comment &rarr;</button>
-        <div class="sent-note" id="comment-sent">Opening your email app&hellip;</div>
-      </div>
-    </form>
+    <h2>Comments</h2>
+    <p class="hint">Sign in with Google, Facebook, Twitter or just a name to join the discussion.</p>
+    <div id="disqus_thread"></div>
   `;
-  document.getElementById('comment-form').addEventListener('submit', (ev) => {
-    ev.preventDefault();
-    const name = document.getElementById('cm-name').value.trim();
-    const text = document.getElementById('cm-text').value.trim();
-    const subject = encodeURIComponent(`Comment on "${plainTitle}"`);
-    const body = encodeURIComponent(`${text}\n\n— ${name}\n\n(re: ${shareUrl})`);
-    window.location.href = `mailto:${AUTHOR_EMAIL}?subject=${subject}&body=${body}`;
-    const note = document.getElementById('comment-sent');
-    note.classList.add('show');
-  });
+  loadDisqus(p, shareUrl);
 
   const next = sorted[(idx + 1) % sorted.length];
   nextPostEl.innerHTML = `
@@ -969,17 +1051,39 @@ function openPost(slug) {
       <span class="go">&rarr;</span>
     </a>
   `;
-  reader.classList.add('open');
-  reader.setAttribute('aria-hidden', 'false');
-  reader.scrollTop = 0;
+  showOverlay(reader);
+}
+
+/* ---------- overlay "pages" (post reader, about, contact) ----------
+   Only one of #reader / #about-view / #contact-view is visible at a time;
+   this is what makes About and Contact feel like real separate pages
+   rather than sections you scroll past on the homepage. */
+const aboutView = document.getElementById('about-view');
+const contactView = document.getElementById('contact-view');
+const allOverlays = [reader, aboutView, contactView];
+
+function showOverlay(el) {
+  allOverlays.forEach(v => { v.classList.remove('open'); v.setAttribute('aria-hidden', 'true'); });
+  el.classList.add('open');
+  el.setAttribute('aria-hidden', 'false');
+  el.scrollTop = 0;
   document.body.style.overflow = 'hidden';
 }
 
 function closeReader() {
-  reader.classList.remove('open');
-  reader.setAttribute('aria-hidden', 'true');
+  allOverlays.forEach(v => { v.classList.remove('open'); v.setAttribute('aria-hidden', 'true'); });
   document.body.style.overflow = '';
   history.replaceState(null, '', '#top');
+}
+
+function openAbout() {
+  showOverlay(aboutView);
+  history.pushState(null, '', '#about');
+}
+
+function openContact() {
+  showOverlay(contactView);
+  history.pushState(null, '', '#contact');
 }
 
 reader.addEventListener('scroll', () => {
@@ -991,14 +1095,20 @@ document.addEventListener('click', (e) => {
   const el = e.target.closest('[data-nav]');
   if (!el) return;
   const href = el.getAttribute('href') || '';
-  if (el.id === 'back-btn') { e.preventDefault(); closeReader(); return; }
+  if (el.hasAttribute('data-close-view')) { e.preventDefault(); closeReader(); return; }
   if (href.startsWith('#post=')) {
     e.preventDefault();
     const slug = href.replace('#post=', '');
     history.pushState(null, '', href);
     openPost(slug);
-  } else if (href === '#top' || href === '#about' || href === '#contact') {
-    if (reader.classList.contains('open')) closeReader();
+  } else if (href === '#about') {
+    e.preventDefault();
+    openAbout();
+  } else if (href === '#contact') {
+    e.preventDefault();
+    openContact();
+  } else if (href === '#top') {
+    if (allOverlays.some(v => v.classList.contains('open'))) closeReader();
   }
 });
 
@@ -1010,7 +1120,7 @@ if (contactForm) {
     const email = document.getElementById('c-email').value.trim();
     const message = document.getElementById('c-message').value.trim();
     const subject = encodeURIComponent(`Message from ${name} via Law Off Track`);
-    const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
+    const body = encodeURIComponent(`${message}\n\nFrom: ${name} (${email})`);
     window.location.href = `mailto:${AUTHOR_EMAIL}?subject=${subject}&body=${body}`;
   });
 }
@@ -1020,6 +1130,8 @@ window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && reader.cla
 window.addEventListener('popstate', () => {
   const h = location.hash;
   if (h.startsWith('#post=')) openPost(h.replace('#post=', ''));
+  else if (h === '#about') showOverlay(aboutView);
+  else if (h === '#contact') showOverlay(contactView);
   else closeReader();
 });
 

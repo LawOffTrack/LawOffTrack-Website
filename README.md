@@ -61,6 +61,14 @@ Once that's done, go to `yoursite.netlify.app/admin` (or, once your domain
 is connected, `lawofftrack.com/admin`), log in with the email and password
 from step 4, and you'll see an editor.
 
+If the invite link doesn't prompt you for a password, it likely landed on
+the homepage instead of `/admin` — this `index.html` already redirects that
+automatically, so make sure you've uploaded the current version of the
+file. If you see "Git Gateway backend is not returning valid settings,"
+double-check Git Gateway (step 3 above) actually shows **Enabled**, not
+just visible in the list — it sometimes needs to be toggled on explicitly
+even after Identity itself is set up.
+
 ## Step 4 — Connect your own domain (the only paid part)
 
 1. Buy your domain from any registrar (Namecheap, GoDaddy, etc).
@@ -114,11 +122,40 @@ sync). Since the Weebly dashboard login wasn't accessible, everything was
 pulled from the public blog pages, so it's worth a quick read-through of
 each post once the site is live, just to confirm nothing looks off.
 
-## A note on the Contact form and comments
+## A note on the Contact form
 
-Since this is a free static site with no server, the Contact form and each
-post's comment box work by opening the visitor's own email app with the
-message pre-filled, addressed to your inbox — there's no database and
-nothing for you to manage. WhatsApp and LinkedIn share buttons on each post
-work the same simple way, just opening those apps/sites with the link
-pre-filled.
+Since this is a free static site with no server, the Contact form works by
+opening the visitor's own email app with the message pre-filled, addressed
+to your inbox — there's no database and nothing for you to manage.
+WhatsApp and LinkedIn share buttons on each post work the same simple way,
+just opening those apps/sites with the link pre-filled.
+
+## Turning on comments (Disqus)
+
+Each post has a comments box, but it needs a one-time, free setup before it
+works — right now it shows a placeholder message instead.
+
+1. Go to [disqus.com](https://disqus.com) and sign up (free — this creates
+   the "Basic" plan, which is free forever but shows one ad above the
+   comments; removing the ad needs a paid plan, roughly $12+/month).
+2. Click **I want to install Disqus on my site**, and register a new site.
+   You'll be asked for a **shortname** — pick something like
+   `law-off-track` (it must be unique across all of Disqus; add a suffix if
+   it's taken).
+3. In Disqus's dashboard, go to **Settings → General** for your site, and
+   set **Website URL** to your live Netlify (or later, custom domain) URL.
+4. Open `index.html` in your repo, find the line:
+   `const DISQUS_SHORTNAME = 'YOUR-DISQUS-SHORTNAME';`
+   and replace `YOUR-DISQUS-SHORTNAME` with the shortname you picked in
+   step 2 (keep the quotes). Commit the change.
+5. Wait for Netlify to redeploy (a minute or two), then open any post —
+   the comments box will now show a real "sign in with Google / Facebook /
+   Twitter or a name" comment form, and everything posted there is public,
+   threaded, and moderatable from your Disqus dashboard (delete spam,
+   approve first-time commenters, etc — under **Moderate** on disqus.com).
+
+One thing worth knowing upfront: that top ad on the free plan is served
+directly by Disqus's own script, not something this site's code controls,
+so it can't be hidden with CSS or code — doing that would violate Disqus's
+terms and risks your comments being disabled site-wide. If the ad ends up
+bothering you, the only clean way around it is their paid ads-free tier.
