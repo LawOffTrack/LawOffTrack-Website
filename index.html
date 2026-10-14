@@ -719,7 +719,8 @@ article.post .body hr { border: none; border-top: 1px solid color-mix(in srgb, v
         </div>
         <div class="full">
           <button type="submit" class="btn-primary">Send message &rarr;</button>
-          <div class="form-note">Opens your email app with this message ready to send to yukti15garg@gmail.com. This site has no server, so nothing is transmitted until you hit send there.</div>
+          <div class="form-note" id="contact-form-note">Submits straight to yukti15garg@gmail.com. Nothing opens on your screen; you'll see a confirmation below once it's sent.</div>
+          <div class="sent-note" id="contact-sent"></div>
         </div>
       </form>
     </div>
@@ -948,6 +949,18 @@ const shareRowEl = document.getElementById('share-row');
 const commentsEl = document.getElementById('comments');
 const progress = document.getElementById('progress');
 const AUTHOR_EMAIL = 'yukti15garg@gmail.com';
+
+/* ---------- Contact form (Formspree) ----------
+   1. Sign up free at https://formspree.io and create a new form pointed at
+      yukti15garg@gmail.com.
+   2. Formspree gives you a form ID (the last part of a URL like
+      https://formspree.io/f/abcdwxyz -> "abcdwxyz"). Replace the
+      placeholder below with it.
+   3. In Formspree's dashboard for this form, add your live site's URL
+      under Settings -> Allowed Domains, or submissions will be blocked.
+   Until a real ID is in place, the form quietly falls back to opening the
+   visitor's own email app (the old mailto behaviour), so it never breaks. */
+const FORMSPREE_ID = 'xvkzwyle';
 const SITE_NAME = 'Law Off Track';
 
 /* ---------- Disqus comments ----------
@@ -958,7 +971,7 @@ const SITE_NAME = 'Law Off Track';
    Disqus is a single-page app here (hash routing, no full page reloads
    between posts), so after the very first load we use DISQUS.reset()
    instead of re-inserting the embed script. */
-const DISQUS_SHORTNAME = 'YOUR-DISQUS-SHORTNAME';
+const DISQUS_SHORTNAME = 'lawofftrack';
 let disqusInited = false;
 
 function loadDisqus(p, pageUrl) {
@@ -1115,14 +1128,55 @@ document.addEventListener('click', (e) => {
 
 const contactForm = document.getElementById('contact-form');
 if (contactForm) {
+  const sentNote = document.getElementById('contact-sent');
+  const formNote = document.getElementById('contact-form-note');
+
+  function mailtoFallback(name, email, message) {
+    const subject = encodeURIComponent(`Message from ${name} via Law Off Track`);
+    const body = encodeURIComponent(`${message}\n\nFrom: ${name} (${email})`);
+    window.location.href = `mailto:${AUTHOR_EMAIL}?subject=${subject}&body=${body}`;
+  }
+
+  if (FORMSPREE_ID === 'YOUR-FORMSPREE-ID') {
+    formNote.textContent = "Opens your email app with this message ready to send to yukti15garg@gmail.com. (A direct send-from-the-page option isn't switched on yet.)";
+  }
+
   contactForm.addEventListener('submit', (ev) => {
     ev.preventDefault();
     const name = document.getElementById('c-name').value.trim();
     const email = document.getElementById('c-email').value.trim();
     const message = document.getElementById('c-message').value.trim();
-    const subject = encodeURIComponent(`Message from ${name} via Law Off Track`);
-    const body = encodeURIComponent(`${message}\n\nFrom: ${name} (${email})`);
-    window.location.href = `mailto:${AUTHOR_EMAIL}?subject=${subject}&body=${body}`;
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+
+    if (FORMSPREE_ID === 'YOUR-FORMSPREE-ID') {
+      mailtoFallback(name, email, message);
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+    sentNote.classList.remove('show');
+
+    fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: new FormData(contactForm)
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('send failed');
+        sentNote.textContent = "Sent. Thanks, I'll get back to you soon.";
+        sentNote.classList.add('show');
+        contactForm.reset();
+      })
+      .catch(() => {
+        sentNote.textContent = "Couldn't send that directly, opening your email app instead…";
+        sentNote.classList.add('show');
+        mailtoFallback(name, email, message);
+      })
+      .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send message →';
+      });
   });
 }
 
