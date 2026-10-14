@@ -527,7 +527,10 @@ article.post .p-meta { font-family: var(--mono); font-size: .74rem; color: var(-
 article.post .p-meta .tag { padding: 3px 10px; border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent); border-radius: 999px; }
 
 article.post .body { font-size: 1.08rem; }
-article.post .body p { margin: 0 0 1.35em; color: var(--ink); }
+article.post .body p {
+  margin: 0 0 1.35em; color: var(--ink);
+  text-align: justify; text-justify: inter-word; hyphens: auto; -webkit-hyphens: auto;
+}
 article.post .body h3 { font-family: var(--serif); font-size: 1.35rem; margin: 2em 0 .7em; color: var(--accent); }
 article.post .body blockquote {
   margin: 1.8em 0; padding: 4px 0 4px 22px; border-left: 2px solid var(--accent);
@@ -703,7 +706,7 @@ article.post .body hr { border: none; border-top: 1px solid color-mix(in srgb, v
   <div class="static-page">
     <div class="contact-panel" id="contact">
       <h2>Contact</h2>
-      <p>For any queries ranging from &ldquo;what exactly is the blog's motive&rdquo; to &ldquo;are you even qualified?&rdquo;, drop a line below and it lands straight in my inbox, or write directly to <a class="email-link" href="mailto:yukti15garg@gmail.com">yukti15garg@gmail.com</a>.</p>
+      <p>For any queries ranging from &ldquo;what exactly is the blog's motive&rdquo; to &ldquo;are you even qualified?&rdquo;, drop a line below and it lands straight in my inbox.</p>
       <form id="contact-form" class="form-grid">
         <div>
           <label class="field-label" for="c-name">Name</label>
@@ -1138,7 +1141,7 @@ if (contactForm) {
   }
 
   if (FORMSPREE_ID === 'YOUR-FORMSPREE-ID') {
-    formNote.textContent = "Opens your email app with this message ready to send to yukti15garg@gmail.com. (A direct send-from-the-page option isn't switched on yet.)";
+    formNote.textContent = "Opens your email app with this message ready to send. (A direct send-from-the-page option isn't switched on yet.)";
   }
 
   contactForm.addEventListener('submit', (ev) => {
